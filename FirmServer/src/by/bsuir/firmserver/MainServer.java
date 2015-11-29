@@ -13,6 +13,7 @@ import by.bsuir.firmserver.rmi.actions.admincommands.DeleteUser;
 import by.bsuir.firmserver.rmi.actions.firmcommands.GetFirmPerfomance;
 import by.bsuir.firmserver.rmi.actions.firmcommands.GetUserFirms;
 import by.bsuir.firmserver.rmi.actions.firmcommands.RegisterFirm;
+import by.bsuir.firmserver.rmi.actions.rewievcommands.GetFirmReviews;
 import by.bsuir.firmserver.rmi.actions.usercommands.LoginUser;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -66,6 +67,8 @@ public class MainServer {
             registry.rebind(Announcement.GET_FIRM_PERFOMANCE, new GetFirmPerfomance(perfonamceDao));
             
             registry.rebind(Announcement.REGISTER_FIRM, new RegisterFirm(daoFactory));
+                        
+            registry.rebind(Announcement.GET_FIRM_REVIEWS, new GetFirmReviews(daoFactory));
             
         } catch (SQLException | NullPointerException | RemoteException ex) {
             Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);

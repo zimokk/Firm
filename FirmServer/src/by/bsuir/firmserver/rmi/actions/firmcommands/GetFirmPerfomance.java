@@ -2,7 +2,7 @@ package by.bsuir.firmserver.rmi.actions.firmcommands;
 
 import by.bsuir.firmserver.dao.GenericDao;
 import by.bsuir.firmserver.rmi.RemoteCustomCommand;
-import by.bsuir.firmserver.subjectarea.Perfomance;
+import by.bsuir.firmserver.subjectarea.classes.Perfomance;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

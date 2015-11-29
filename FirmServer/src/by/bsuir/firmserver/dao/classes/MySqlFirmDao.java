@@ -1,6 +1,6 @@
 package by.bsuir.firmserver.dao.classes;
 
-import by.bsuir.firmserver.subjectarea.Firm;
+import by.bsuir.firmserver.subjectarea.classes.Firm;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -21,7 +21,7 @@ public class MySqlFirmDao extends AbstractDao<Firm,String> {
         readFirmStatement.setString(1, firm_title);
         ResultSet result = readFirmStatement.executeQuery();
         if(!result.next()){
-            System.out.println("No data found");
+            System.out.println("No data found(read firms)");
             return null;
         }
         else{

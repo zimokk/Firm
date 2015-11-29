@@ -21,8 +21,11 @@ public class AddInstance<T> extends UnicastRemoteObject implements RemoteCommand
     @Override
     public T execute(T... args) throws RemoteException {
         try {
-            MySqlClassDao.persist((T)args[0]);
-            System.out.println("added: " + (T)args[0]);
+            T temp = (T)args[0];
+            if(temp != null){
+                MySqlClassDao.persist(temp);
+                System.out.println("added: " + temp);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(AddInstance.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -1,16 +1,22 @@
 package by.bsuir.firmclient.panels;
 
 import by.bsuir.firmclient.rmi.Commander;
-import by.bsuir.firmserver.subjectarea.Firm;
-import by.bsuir.firmserver.subjectarea.Perfomance;
+import by.bsuir.firmserver.subjectarea.classes.Firm;
+import by.bsuir.firmserver.subjectarea.classes.Perfomance;
+import by.bsuir.firmserver.subjectarea.classes.Review;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.table.DefaultTableModel;
+import org.knowm.xchart.*;
+import org.knowm.xchart.StyleManager.ChartTheme;
+import org.knowm.xchart.StyleManager.ChartType;
 
 public class WorkAreaPanel extends javax.swing.JPanel {
     
@@ -29,7 +35,9 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     
     private void cleanPerfomanceData(){
         DefaultComboBoxModel worksComboBoxModel = (DefaultComboBoxModel) this.FirmjComboBox.getModel();
+        DefaultComboBoxModel worksComboBoxModel1 = (DefaultComboBoxModel) this.FirmjComboBox1.getModel();
         worksComboBoxModel.removeAllElements();
+        worksComboBoxModel1.removeAllElements();
     }
     
     private void updateFirmTableData(List<Firm> firms){
@@ -45,7 +53,9 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     
     private void updatePerfomanceData(List<Firm> firms){
         DefaultComboBoxModel worksComboBoxModel = (DefaultComboBoxModel) this.FirmjComboBox.getModel();
+        DefaultComboBoxModel worksComboBoxModel1 = (DefaultComboBoxModel) this.FirmjComboBox1.getModel();
         for(Firm firm : firms){
+            worksComboBoxModel1.addElement(firm.getTitle());
             worksComboBoxModel.addElement(firm.getTitle());
         }
     }
@@ -112,8 +122,10 @@ public class WorkAreaPanel extends javax.swing.JPanel {
                     updatePerfomanceData(firms);
                     updatePerfomanceValue(firms.get(0).getTitle());
                 }
+                this.SavePerfomancejButton.setEnabled(true);
             }
             else{
+                this.SavePerfomancejButton.setEnabled(false);
                 cleanValues();
             }
         } catch (RemoteException | NotBoundException ex) {
@@ -170,7 +182,6 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         EquityjSpinner = new javax.swing.JSpinner();
         SavePerfomancejButton = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        Coef1jButton = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         Coef1jTextField = new javax.swing.JTextField();
         Coef2jTextField = new javax.swing.JTextField();
@@ -187,21 +198,18 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         Coef5jTextField = new javax.swing.JTextField();
         Coef6jTextField = new javax.swing.JTextField();
         Coef7jTextField = new javax.swing.JTextField();
-        Coef2jButton = new javax.swing.JButton();
-        Coef3jButton = new javax.swing.JButton();
-        Coef4jButton = new javax.swing.JButton();
-        Coef5jButton = new javax.swing.JButton();
-        Coef6jButton = new javax.swing.JButton();
-        Coef7jButton = new javax.swing.JButton();
-        Coef8jButton = new javax.swing.JButton();
         CoefAlljButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
+        FirmjComboBox1 = new javax.swing.JComboBox();
+        jDesktopPane3 = new javax.swing.JDesktopPane();
+        GraphjButton = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
         FirmsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null}
+
             },
             new String [] {
                 "Название", "Дата регистрации", "Адрес", "Структура предприятия"
@@ -559,6 +567,7 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     );
 
     SavePerfomancejButton.setText("Сохранить");
+    SavePerfomancejButton.setEnabled(false);
     SavePerfomancejButton.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             SavePerfomancejButtonActionPerformed(evt);
@@ -594,9 +603,7 @@ public class WorkAreaPanel extends javax.swing.JPanel {
 
     jTabbedPane1.addTab("Финансовые показатели", jPanel2);
 
-    Coef1jButton.setText("Рассчитать");
-
-    jLabel11.setText("Коэф. автономии");
+    jLabel11.setText("Коэффициент автономии");
 
     Coef1jTextField.setEditable(false);
 
@@ -628,24 +635,53 @@ public class WorkAreaPanel extends javax.swing.JPanel {
 
     Coef7jTextField.setEditable(false);
 
-    Coef2jButton.setText("Рассчитать");
-
-    Coef3jButton.setText("Рассчитать");
-
-    Coef4jButton.setText("Рассчитать");
-
-    Coef5jButton.setText("Рассчитать");
-
-    Coef6jButton.setText("Рассчитать");
-
-    Coef7jButton.setText("Рассчитать");
-
-    Coef8jButton.setText("Рассчитать");
-
-    CoefAlljButton.setText("Рассчитать все");
+    CoefAlljButton.setText("Рассчитать");
+    CoefAlljButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            CoefAlljButtonActionPerformed(evt);
+        }
+    });
 
     jSeparator1.setBackground(new java.awt.Color(204, 204, 204));
     jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
+
+    FirmjComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            FirmjComboBox1ActionPerformed(evt);
+        }
+    });
+
+    GraphjButton.setText("График фин. состояния");
+    GraphjButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            GraphjButtonActionPerformed(evt);
+        }
+    });
+
+    jButton3.setText("Отчёт");
+
+    javax.swing.GroupLayout jDesktopPane3Layout = new javax.swing.GroupLayout(jDesktopPane3);
+    jDesktopPane3.setLayout(jDesktopPane3Layout);
+    jDesktopPane3Layout.setHorizontalGroup(
+        jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(jDesktopPane3Layout.createSequentialGroup()
+            .addContainerGap()
+            .addComponent(GraphjButton)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addComponent(jButton3)
+            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+    );
+    jDesktopPane3Layout.setVerticalGroup(
+        jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane3Layout.createSequentialGroup()
+            .addContainerGap()
+            .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(GraphjButton, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addContainerGap())
+    );
+    jDesktopPane3.setLayer(GraphjButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+    jDesktopPane3.setLayer(jButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -655,71 +691,48 @@ public class WorkAreaPanel extends javax.swing.JPanel {
             .addContainerGap()
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addGap(582, 582, 582)
-                    .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(FirmjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(0, 0, Short.MAX_VALUE))
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(jLabel13, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel12)
-                                .addComponent(jLabel11)
-                                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel15)
-                                .addComponent(jLabel18)
-                                .addComponent(jLabel14)
-                                .addComponent(jLabel16))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(jLabel12)
+                        .addComponent(jLabel11)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel18)
+                        .addComponent(jLabel14)
+                        .addComponent(jLabel16)
+                        .addComponent(jLabel15)
+                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
                     .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(Coef1jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef5jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef4jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef3jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef2jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef6jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef8jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(Coef7jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(Coef1jButton)
-                            .addComponent(Coef2jButton)
-                            .addComponent(Coef3jButton)
-                            .addComponent(Coef4jButton)
-                            .addComponent(Coef5jButton)
-                            .addComponent(Coef6jButton)
-                            .addComponent(Coef7jButton))
-                        .addComponent(Coef8jButton))
-                    .addGap(52, 52, 52))))
+                        .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jDesktopPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(Coef1jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef5jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef4jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef3jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef2jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef6jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef8jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Coef7jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGap(58, 58, 58)))))
+            .addContainerGap())
     );
     jPanel3Layout.setVerticalGroup(
         jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel3Layout.createSequentialGroup()
             .addContainerGap()
             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jSeparator1)
                 .addGroup(jPanel3Layout.createSequentialGroup()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(Coef1jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Coef2jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Coef3jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Coef4jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Coef5jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(Coef6jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(Coef7jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef7jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGap(229, 229, 229)
+                            .addComponent(Coef7jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -749,16 +762,16 @@ public class WorkAreaPanel extends javax.swing.JPanel {
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(Coef8jButton, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef8jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(Coef8jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel3Layout.createSequentialGroup()
                             .addGap(1, 1, 1)
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGap(26, 26, 26)
-                    .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 40, Short.MAX_VALUE))
-                .addComponent(jSeparator1))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(FirmjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jDesktopPane3)))
             .addContainerGap())
     );
 
@@ -781,25 +794,69 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     jTabbedPane1.getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
-    private void DeleteFirmjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteFirmjButtonActionPerformed
+    private void FirmjComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FirmjComboBox1ActionPerformed
+        double[] mas = {0,0,0,0,0,0,0,0};
+        this.viewCoefs(mas);
+    }//GEN-LAST:event_FirmjComboBox1ActionPerformed
+
+    private void SavePerfomancejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SavePerfomancejButtonActionPerformed
+        try {
+            String firmTitle = (String) this.FirmjComboBox.getSelectedItem();
+            Commander commander = new Commander();
+            commander.deletePerfomance.execute(new Perfomance(firmTitle,0,0,0,0,0,0,0,0,0,0));
+            int income = (int) this.IncomejSpinner.getValue();
+            int costs = (int) this.CostsjSpinner.getValue();
+            int profit = (int) this.ProfitjSpinner.getValue();
+            int fixedAssets = (int) this.FixedAssetsjSpinner.getValue();
+            int currentAssets = (int) this.CurrentAssetsjSpinner.getValue();
+            int ownedAssets = (int) this.OwnedAssetsjSpinner.getValue();
+            int longTermDuties = (int) this.LongTermDutiesjSpinner.getValue();
+            int shortTermDuties = (int) this.ShortTermDutiesjSpinner.getValue();
+            int borrowedCapital = (int) this.BorrowedCapitaljSpinner.getValue();
+            int equity = (int) this.EquityjSpinner.getValue();
+            commander.addPerfomance.execute(new Perfomance(firmTitle,income,costs,profit,fixedAssets,currentAssets,ownedAssets,
+                longTermDuties,shortTermDuties,borrowedCapital,equity));
+        } catch (RemoteException ex) {
+            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_SavePerfomancejButtonActionPerformed
+
+    private void FirmjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FirmjComboBoxActionPerformed
+        String firmTitle = (String) this.FirmjComboBox.getSelectedItem();
+        updatePerfomanceValue(firmTitle);
+    }//GEN-LAST:event_FirmjComboBoxActionPerformed
+
+    private void ConfirmRedactjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmRedactjButtonActionPerformed
         try {
             Commander commander = new Commander();
             int row = FirmsTable.getSelectedRow();
-            String title = (String) FirmsTable.getValueAt(row, 0);
-            Firm firm = new Firm(title,null,0,null,null);
+            String previousTitle = (String) FirmsTable.getValueAt(row, 0);
+            Firm firm = new Firm(previousTitle,null,0,null,null);
             commander.deleteFirm.execute(firm);
-            cleanValues();
-            updateUserData(login);
-        } catch (RemoteException | NotBoundException ex) {
+
+            String title = this.FirmTitlejTextField.getText();
+            String structure = this.FirmStructurejTextField.getText();
+            String adress = this.FirmAdressjTextField.getText();
+            Date registrationDate = this.FirmdateChooserPanel.getModel().getCurrent().getTime();
+
+            updateRedactedPerfomance(previousTitle,title);
+
+            firm = new Firm(title,registrationDate,0,adress,structure);
+            if(commander.registerFirm.execute(login,firm)){
+                changeForRegisterFirm(false);
+                updateUserData(login);
+            }
+            else{
+                this.FirmErrorjLabel.setEnabled(true);
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_DeleteFirmjButtonActionPerformed
-
-    private void RegisterFirmjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterFirmjButtonActionPerformed
-        if(login != null && !login.equals(" ")){
-            changeForRegisterFirm(true);
-        }
-    }//GEN-LAST:event_RegisterFirmjButtonActionPerformed
+    }//GEN-LAST:event_ConfirmRedactjButtonActionPerformed
 
     private void DeclineFirmjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeclineFirmjButtonActionPerformed
         changeForRegisterFirm(false);
@@ -812,7 +869,7 @@ public class WorkAreaPanel extends javax.swing.JPanel {
             String structure = this.FirmStructurejTextField.getText();
             String adress = this.FirmAdressjTextField.getText();
             Date registrationDate = this.FirmdateChooserPanel.getModel().getCurrent().getTime();
-            
+
             Firm firm = new Firm(title,registrationDate,0,adress,structure);
             if(commander.registerFirm.execute(login,firm)){
                 changeForRegisterFirm(false);
@@ -838,72 +895,82 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_RedactFirmjButtonActionPerformed
 
-    private void ConfirmRedactjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConfirmRedactjButtonActionPerformed
+    private void DeleteFirmjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteFirmjButtonActionPerformed
         try {
             Commander commander = new Commander();
             int row = FirmsTable.getSelectedRow();
-            String previousTitle = (String) FirmsTable.getValueAt(row, 0);
-            Firm firm = new Firm(previousTitle,null,0,null,null);
-            commander.deleteFirm.execute(firm);
-            
-            String title = this.FirmTitlejTextField.getText();
-            String structure = this.FirmStructurejTextField.getText();
-            String adress = this.FirmAdressjTextField.getText();
-            Date registrationDate = this.FirmdateChooserPanel.getModel().getCurrent().getTime();
-            
-            updateRedactedPerfomance(previousTitle,title);
-            
-            firm = new Firm(title,registrationDate,0,adress,structure);
-            if(commander.registerFirm.execute(login,firm)){
-                changeForRegisterFirm(false);
+            if(row >= 0){
+                String title = (String) FirmsTable.getValueAt(row, 0);
+                Firm firm = new Firm(title,null,0,null,null);
+                commander.deleteFirm.execute(firm);
+                cleanValues();
                 updateUserData(login);
             }
-            else{
-                this.FirmErrorjLabel.setEnabled(true);
-            }
-        } catch (RemoteException ex) {
-            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
+        } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_ConfirmRedactjButtonActionPerformed
+    }//GEN-LAST:event_DeleteFirmjButtonActionPerformed
 
-    private void FirmjComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FirmjComboBoxActionPerformed
-        String firmTitle = (String) this.FirmjComboBox.getSelectedItem();
-        updatePerfomanceValue(firmTitle);
-    }//GEN-LAST:event_FirmjComboBoxActionPerformed
+    private void RegisterFirmjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegisterFirmjButtonActionPerformed
+        if(login != null && !login.equals(" ")){
+            changeForRegisterFirm(true);
+        }
+    }//GEN-LAST:event_RegisterFirmjButtonActionPerformed
 
-    private void SavePerfomancejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SavePerfomancejButtonActionPerformed
+    private void CoefAlljButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CoefAlljButtonActionPerformed
         try {
-            String firmTitle = (String) this.FirmjComboBox.getSelectedItem();
+            String firmTitle = (String) this.FirmjComboBox1.getSelectedItem();
+            if(firmTitle != null){
+                Commander commander = new Commander();
+                viewCoefs((double[]) commander.getFirmReviews.execute(firmTitle));
+            }
+        } catch (RemoteException | NotBoundException ex) {
+            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_CoefAlljButtonActionPerformed
+
+    private void GraphjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_GraphjButtonActionPerformed
+        displayChart();
+    }//GEN-LAST:event_GraphjButtonActionPerformed
+
+    private void displayChart(){
+        try {
+            Chart chart = new ChartBuilder().chartType(ChartType.Bar).width(800).height(600).title("Финансовое состояние фирмы").xAxisTitle("Показатели").yAxisTitle("Значение").theme(ChartTheme.GGPlot2).build();
             Commander commander = new Commander();
-            commander.deletePerfomance.execute(new Perfomance(firmTitle,0,0,0,0,0,0,0,0,0,0));
-            int income = (int) this.IncomejSpinner.getValue();
-            int costs = (int) this.CostsjSpinner.getValue();
-            int profit = (int) this.ProfitjSpinner.getValue();
-            int fixedAssets = (int) this.FixedAssetsjSpinner.getValue();
-            int currentAssets = (int) this.CurrentAssetsjSpinner.getValue();
-            int ownedAssets = (int) this.OwnedAssetsjSpinner.getValue();
-            int longTermDuties = (int) this.LongTermDutiesjSpinner.getValue();
-            int shortTermDuties = (int) this.ShortTermDutiesjSpinner.getValue();
-            int borrowedCapital = (int) this.BorrowedCapitaljSpinner.getValue();
-            int equity = (int) this.EquityjSpinner.getValue();
-            commander.addPerfomance.execute(new Perfomance(firmTitle,income,costs,profit,fixedAssets,currentAssets,ownedAssets,
-                                        longTermDuties,shortTermDuties,borrowedCapital,equity));
+            String firmTitle = (String) FirmjComboBox1.getSelectedItem();
+            double[] values = (double[])commander.getFirmReviews.execute(firmTitle);
+            chart.addSeries("Норма", Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8"}), Arrays.asList(new Number[] {0.6,0.5,0.1,0.35,0,0.1,2,0}));
+            chart.addSeries("Показатели",  Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8"}),Arrays.asList(new Number[] {values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7]}));
+            new SwingWrapper(chart).displayChart();
         } catch (RemoteException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_SavePerfomancejButtonActionPerformed
-
+    }
+    
+    private void viewCoefs(double[] values){
+        if(values != null){
+            this.Coef1jTextField.setText(""+values[0]);
+            this.Coef2jTextField.setText(""+values[1]);
+            this.Coef3jTextField.setText(""+values[2]);
+            this.Coef4jTextField.setText(""+values[3]);
+            this.Coef5jTextField.setText(""+values[4]);
+            this.Coef6jTextField.setText(""+values[5]);
+            this.Coef7jTextField.setText(""+values[6]);
+            this.Coef8jTextField.setText(""+values[7]);
+        }
+    }
+    
     private void updateRedactedPerfomance(String oldTitle, String newTitle){
         try {
             Commander commander = new Commander();
             Perfomance tempPerfomance = (Perfomance)commander.getFirmPerfomance.execute(oldTitle);
-            commander.deletePerfomance.execute(tempPerfomance);
-            tempPerfomance.setFirm_title(newTitle);
-            commander.addPerfomance.execute(tempPerfomance);
+            if(tempPerfomance != null){
+                commander.deletePerfomance.execute(tempPerfomance);
+                tempPerfomance.setFirm_title(newTitle);
+                commander.addPerfomance.execute(tempPerfomance);
+            }
         } catch (RemoteException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
@@ -932,21 +999,13 @@ public class WorkAreaPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JSpinner BorrowedCapitaljSpinner;
-    private javax.swing.JButton Coef1jButton;
     private javax.swing.JTextField Coef1jTextField;
-    private javax.swing.JButton Coef2jButton;
     private javax.swing.JTextField Coef2jTextField;
-    private javax.swing.JButton Coef3jButton;
     private javax.swing.JTextField Coef3jTextField;
-    private javax.swing.JButton Coef4jButton;
     private javax.swing.JTextField Coef4jTextField;
-    private javax.swing.JButton Coef5jButton;
     private javax.swing.JTextField Coef5jTextField;
-    private javax.swing.JButton Coef6jButton;
     private javax.swing.JTextField Coef6jTextField;
-    private javax.swing.JButton Coef7jButton;
     private javax.swing.JTextField Coef7jTextField;
-    private javax.swing.JButton Coef8jButton;
     private javax.swing.JTextField Coef8jTextField;
     private javax.swing.JButton CoefAlljButton;
     private javax.swing.JButton ConfirmFirmjButton;
@@ -962,8 +1021,10 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     private javax.swing.JTextField FirmTitlejTextField;
     private datechooser.beans.DateChooserPanel FirmdateChooserPanel;
     private javax.swing.JComboBox FirmjComboBox;
+    private javax.swing.JComboBox FirmjComboBox1;
     private javax.swing.JTable FirmsTable;
     private javax.swing.JSpinner FixedAssetsjSpinner;
+    private javax.swing.JButton GraphjButton;
     private javax.swing.JSpinner IncomejSpinner;
     private javax.swing.JSpinner LongTermDutiesjSpinner;
     private javax.swing.JSpinner OwnedAssetsjSpinner;
@@ -974,7 +1035,9 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner ShortTermDutiesjSpinner;
     private datechooser.beans.DateChooserPanel dateChooserPanel1;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JDesktopPane jDesktopPane1;
+    private javax.swing.JDesktopPane jDesktopPane3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;

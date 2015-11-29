@@ -2,7 +2,7 @@ package by.bsuir.firmserver.rmi.actions.usercommands;
 
 import by.bsuir.firmserver.dao.GenericDao;
 import by.bsuir.firmserver.rmi.RemoteValidatedCommand;
-import by.bsuir.firmserver.subjectarea.User;
+import by.bsuir.firmserver.subjectarea.classes.User;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

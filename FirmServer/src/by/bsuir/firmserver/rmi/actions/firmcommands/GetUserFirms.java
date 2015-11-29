@@ -2,8 +2,8 @@ package by.bsuir.firmserver.rmi.actions.firmcommands;
 
 import by.bsuir.firmserver.dao.DaoFactory;
 import by.bsuir.firmserver.rmi.RemoteCustomCommand;
-import by.bsuir.firmserver.subjectarea.Firm;
-import by.bsuir.firmserver.subjectarea.User;
+import by.bsuir.firmserver.subjectarea.classes.Firm;
+import by.bsuir.firmserver.subjectarea.classes.User;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;

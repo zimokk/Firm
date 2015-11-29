@@ -1,10 +1,13 @@
 package by.bsuir.firmclient.rmi;
 
+import by.bsuir.firmserver.subjectarea.classes.Review;
+import by.bsuir.firmserver.subjectarea.classes.User;
+import by.bsuir.firmserver.subjectarea.classes.Firm;
+import by.bsuir.firmserver.subjectarea.classes.Perfomance;
 import by.bsuir.firmserver.rmi.Announcement;
 import by.bsuir.firmserver.rmi.RemoteCommand;
 import by.bsuir.firmserver.rmi.RemoteCustomCommand;
 import by.bsuir.firmserver.rmi.RemoteValidatedCommand;
-import by.bsuir.firmserver.subjectarea.*;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -40,6 +43,8 @@ public class Commander{
     
     public RemoteValidatedCommand registerFirm;
     
+    public RemoteCustomCommand getFirmReviews;
+    
     private final Registry registry;
 
     public Commander() throws RemoteException, NotBoundException {
@@ -73,5 +78,7 @@ public class Commander{
         deleteUserLogin = (RemoteCustomCommand) registry.lookup(Announcement.DELETE_USER_LOGIN);
         
         registerFirm = (RemoteValidatedCommand) registry.lookup(Announcement.REGISTER_FIRM);
+        
+        getFirmReviews = (RemoteCustomCommand) registry.lookup(Announcement.GET_FIRM_REVIEWS);
     }
 }

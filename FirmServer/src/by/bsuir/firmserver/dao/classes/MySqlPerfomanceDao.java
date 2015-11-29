@@ -1,6 +1,6 @@
 package by.bsuir.firmserver.dao.classes;
 
-import by.bsuir.firmserver.subjectarea.Perfomance;
+import by.bsuir.firmserver.subjectarea.classes.Perfomance;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

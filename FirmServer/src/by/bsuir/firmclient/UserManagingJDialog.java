@@ -1,7 +1,7 @@
 package by.bsuir.firmclient;
 
 import by.bsuir.firmclient.rmi.Commander;
-import by.bsuir.firmserver.subjectarea.User;
+import by.bsuir.firmserver.subjectarea.classes.User;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.List;

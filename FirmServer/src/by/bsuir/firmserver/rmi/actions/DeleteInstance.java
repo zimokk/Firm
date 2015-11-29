@@ -21,8 +21,11 @@ public class DeleteInstance<T> extends UnicastRemoteObject implements RemoteComm
     @Override
     public T execute(T... args) throws RemoteException {
         try {
-            MySqlClassDao.delete((T) args[0]);
-            System.out.println("deleted: " + (T) args[0]);
+            T temp = (T) args[0];
+            if(temp!= null){
+                MySqlClassDao.delete(temp);
+                System.out.println("deleted: " + temp);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(DeleteInstance.class.getName()).log(Level.SEVERE, null, ex);
         }

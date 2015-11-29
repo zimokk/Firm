@@ -20,8 +20,11 @@ public class UpdateInstance<T> extends UnicastRemoteObject implements RemoteComm
     @Override
     public T execute(T... args) throws RemoteException {
         try {
-            MySqlClassDao.update((T) args[0]);
-            System.out.println("updated: " + (T)args[0]);
+            T temp = (T)args[0];
+            if(temp != null){
+                MySqlClassDao.update(temp);
+                System.out.println("updated: " + temp);
+            }
         } catch (SQLException ex) {
             Logger.getLogger(UpdateInstance.class.getName()).log(Level.SEVERE, null, ex);
         }

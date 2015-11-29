@@ -1,6 +1,6 @@
 package by.bsuir.firmserver.dao.classes;
 
-import by.bsuir.firmserver.subjectarea.Review;
+import by.bsuir.firmserver.subjectarea.classes.Review;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -40,7 +40,7 @@ public class MySqlReviewDao extends AbstractDao<Review, String>{
         preparedStatement.setString(2, object.getName());
         preparedStatement.setDouble(3, object.getValue());
         preparedStatement.setString(4, object.getStandart());
-        preparedStatement.setString(5, object.getStandart());
+        preparedStatement.setString(5, object.getReason());
         preparedStatement.setString(6, object.getSuggestion());
     }
 

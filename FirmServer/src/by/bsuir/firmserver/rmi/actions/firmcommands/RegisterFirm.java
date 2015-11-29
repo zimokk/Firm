@@ -1,9 +1,10 @@
 package by.bsuir.firmserver.rmi.actions.firmcommands;
 
 import by.bsuir.firmserver.dao.DaoFactory;
+import by.bsuir.firmserver.dao.GenericDao;
 import by.bsuir.firmserver.rmi.RemoteValidatedCommand;
-import by.bsuir.firmserver.subjectarea.Firm;
-import by.bsuir.firmserver.subjectarea.User;
+import by.bsuir.firmserver.subjectarea.classes.Firm;
+import by.bsuir.firmserver.subjectarea.classes.User;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
@@ -36,7 +37,8 @@ public class RegisterFirm extends UnicastRemoteObject implements RemoteValidated
                     }
                 }
                 firm.setUser_id(userId);
-                if(daoFactory.getFirmDao(daoFactory.getConnection()).persist(firm)!= null)
+                GenericDao userDao = daoFactory.getFirmDao(daoFactory.getConnection());
+                if(userDao.persist(firm)!= null)
                     return true;
             } catch (SQLException ex) {
                 Logger.getLogger(RegisterFirm.class.getName()).log(Level.SEVERE, null, ex);

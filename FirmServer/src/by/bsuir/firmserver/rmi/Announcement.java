@@ -36,4 +36,5 @@ public class Announcement {
     
     public static final String REGISTER_FIRM = "REGISTER_FIRM";
     
+    public static final String GET_FIRM_REVIEWS = "GET_FIRM_REVIEWS";
 }
