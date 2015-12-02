@@ -1,9 +1,13 @@
 package by.bsuir.firmclient.panels;
 
+import by.bsuir.firmclient.dialogs.RecomendationsJDialog;
 import by.bsuir.firmclient.rmi.Commander;
 import by.bsuir.firmserver.subjectarea.classes.Firm;
 import by.bsuir.firmserver.subjectarea.classes.Perfomance;
 import by.bsuir.firmserver.subjectarea.classes.Review;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -17,6 +21,16 @@ import javax.swing.table.DefaultTableModel;
 import org.knowm.xchart.*;
 import org.knowm.xchart.StyleManager.ChartTheme;
 import org.knowm.xchart.StyleManager.ChartType;
+import word.api.interfaces.IDocument;
+import word.w2004.Document2004;
+import word.w2004.elements.BreakLine;
+import word.w2004.elements.Heading1;
+import word.w2004.elements.Heading2;
+import word.w2004.elements.Paragraph;
+import word.w2004.elements.ParagraphPiece;
+import word.w2004.elements.Table;
+import word.w2004.elements.tableElements.TableEle;
+import word.w2004.style.HeadingStyle;
 
 public class WorkAreaPanel extends javax.swing.JPanel {
     
@@ -198,12 +212,13 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         Coef5jTextField = new javax.swing.JTextField();
         Coef6jTextField = new javax.swing.JTextField();
         Coef7jTextField = new javax.swing.JTextField();
-        CoefAlljButton = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         FirmjComboBox1 = new javax.swing.JComboBox();
         jDesktopPane3 = new javax.swing.JDesktopPane();
         GraphjButton = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        PrintReviewjButton = new javax.swing.JButton();
+        CoefAlljButton = new javax.swing.JButton();
+        RecomandationsjButton = new javax.swing.JButton();
 
         jButton1.setText("jButton1");
 
@@ -635,13 +650,6 @@ public class WorkAreaPanel extends javax.swing.JPanel {
 
     Coef7jTextField.setEditable(false);
 
-    CoefAlljButton.setText("Рассчитать");
-    CoefAlljButton.addActionListener(new java.awt.event.ActionListener() {
-        public void actionPerformed(java.awt.event.ActionEvent evt) {
-            CoefAlljButtonActionPerformed(evt);
-        }
-    });
-
     jSeparator1.setBackground(new java.awt.Color(204, 204, 204));
     jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
@@ -652,13 +660,35 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     });
 
     GraphjButton.setText("График фин. состояния");
+    GraphjButton.setEnabled(false);
     GraphjButton.addActionListener(new java.awt.event.ActionListener() {
         public void actionPerformed(java.awt.event.ActionEvent evt) {
             GraphjButtonActionPerformed(evt);
         }
     });
 
-    jButton3.setText("Отчёт");
+    PrintReviewjButton.setText("Отчёт");
+    PrintReviewjButton.setEnabled(false);
+    PrintReviewjButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            PrintReviewjButtonActionPerformed(evt);
+        }
+    });
+
+    CoefAlljButton.setText("Рассчитать");
+    CoefAlljButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            CoefAlljButtonActionPerformed(evt);
+        }
+    });
+
+    RecomandationsjButton.setText("Рекомендации");
+    RecomandationsjButton.setEnabled(false);
+    RecomandationsjButton.addActionListener(new java.awt.event.ActionListener() {
+        public void actionPerformed(java.awt.event.ActionEvent evt) {
+            RecomandationsjButtonActionPerformed(evt);
+        }
+    });
 
     javax.swing.GroupLayout jDesktopPane3Layout = new javax.swing.GroupLayout(jDesktopPane3);
     jDesktopPane3.setLayout(jDesktopPane3Layout);
@@ -666,22 +696,35 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jDesktopPane3Layout.createSequentialGroup()
             .addContainerGap()
-            .addComponent(GraphjButton)
-            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-            .addComponent(jButton3)
-            .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jDesktopPane3Layout.createSequentialGroup()
+                    .addComponent(GraphjButton)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(PrintReviewjButton)
+                    .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(jDesktopPane3Layout.createSequentialGroup()
+                    .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(RecomandationsjButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addContainerGap())
     );
     jDesktopPane3Layout.setVerticalGroup(
         jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jDesktopPane3Layout.createSequentialGroup()
             .addContainerGap()
-            .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(GraphjButton, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
-                .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addComponent(CoefAlljButton, javax.swing.GroupLayout.DEFAULT_SIZE, 33, Short.MAX_VALUE)
+                .addComponent(RecomandationsjButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)
+            .addGroup(jDesktopPane3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addComponent(PrintReviewjButton, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
+                .addComponent(GraphjButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addContainerGap())
     );
     jDesktopPane3.setLayer(GraphjButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
-    jDesktopPane3.setLayer(jButton3, javax.swing.JLayeredPane.DEFAULT_LAYER);
+    jDesktopPane3.setLayer(PrintReviewjButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+    jDesktopPane3.setLayer(CoefAlljButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
+    jDesktopPane3.setLayer(RecomandationsjButton, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
     javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
     jPanel3.setLayout(jPanel3Layout);
@@ -689,38 +732,34 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
         .addGroup(jPanel3Layout.createSequentialGroup()
             .addContainerGap()
-            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jLabel12)
+                .addComponent(jLabel11)
+                .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel18)
+                .addComponent(jLabel14)
+                .addComponent(jLabel16)
+                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel15)
+                .addComponent(FirmjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
+            .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(jPanel3Layout.createSequentialGroup()
-                    .addComponent(FirmjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGap(0, 0, Short.MAX_VALUE))
-                .addGroup(jPanel3Layout.createSequentialGroup()
+                    .addComponent(jDesktopPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(12, 12, 12))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(jLabel12)
-                        .addComponent(jLabel11)
-                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 405, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel18)
-                        .addComponent(jLabel14)
-                        .addComponent(jLabel16)
-                        .addComponent(jLabel15)
-                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 397, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 130, Short.MAX_VALUE)
-                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 246, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jDesktopPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(Coef1jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef5jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef4jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef3jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef2jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef6jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef8jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(Coef7jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(58, 58, 58)))))
-            .addContainerGap())
+                        .addComponent(Coef1jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef5jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef4jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef3jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef2jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef6jTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef8jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(Coef7jTextField, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGap(68, 68, 68))))
     );
     jPanel3Layout.setVerticalGroup(
         jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -768,10 +807,10 @@ public class WorkAreaPanel extends javax.swing.JPanel {
                             .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                     .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addComponent(FirmjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(CoefAlljButton, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jDesktopPane3)))
+                        .addComponent(jDesktopPane3)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(FirmjComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE)))))
             .addContainerGap())
     );
 
@@ -797,6 +836,8 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     private void FirmjComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FirmjComboBox1ActionPerformed
         double[] mas = {0,0,0,0,0,0,0,0};
         this.viewCoefs(mas);
+        this.RecomandationsjButton.setEnabled(false);
+        this.GraphjButton.setEnabled(false);
     }//GEN-LAST:event_FirmjComboBox1ActionPerformed
 
     private void SavePerfomancejButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SavePerfomancejButtonActionPerformed
@@ -922,7 +963,10 @@ public class WorkAreaPanel extends javax.swing.JPanel {
             String firmTitle = (String) this.FirmjComboBox1.getSelectedItem();
             if(firmTitle != null){
                 Commander commander = new Commander();
-                viewCoefs((double[]) commander.getFirmReviews.execute(firmTitle));
+                viewCoefs((double[]) commander.getFirmReviewsValues.execute(firmTitle));
+                this.RecomandationsjButton.setEnabled(true);
+                this.GraphjButton.setEnabled(true);
+                this.PrintReviewjButton.setEnabled(true);
             }
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
@@ -933,18 +977,95 @@ public class WorkAreaPanel extends javax.swing.JPanel {
         displayChart();
     }//GEN-LAST:event_GraphjButtonActionPerformed
 
+    private void RecomandationsjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RecomandationsjButtonActionPerformed
+        String firmTitle = (String) this.FirmjComboBox1.getSelectedItem();
+        if(firmTitle != null && !firmTitle.equals("")){
+            RecomendationsJDialog rec = new RecomendationsJDialog(firmTitle);
+        }
+    }//GEN-LAST:event_RecomandationsjButtonActionPerformed
+
+    private void PrintReviewjButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PrintReviewjButtonActionPerformed
+        String firmTitle = (String) this.FirmjComboBox1.getSelectedItem();
+        if(firmTitle != null && !"".equals(firmTitle))
+            printReview(firmTitle);
+    }//GEN-LAST:event_PrintReviewjButtonActionPerformed
+
+    private void printReview(String firmTitle){
+        try {
+            Commander commander = new Commander();
+            Firm firm = (Firm) commander.getFirm.execute(firmTitle);
+            List<Review> reviews = (List<Review>)commander.getFirmReviews.execute(firmTitle);
+            IDocument myDoc = new Document2004();
+                myDoc.addEle(Heading1.with("Отчёт о производстве фирмы \""+firmTitle+"\"").create());
+                myDoc.addEle(BreakLine.times(2).create());
+                
+                ParagraphPiece Name = ParagraphPiece.with("Название: ").withStyle().bold().create();
+                ParagraphPiece title = ParagraphPiece.with(firmTitle).create();
+                myDoc.addEle(Paragraph.withPieces(Name, title).create());
+
+                ParagraphPiece Adress = ParagraphPiece.with("Адрес: ").withStyle().bold().create();
+                ParagraphPiece adress = ParagraphPiece.with(firm.getAdress()).create();
+                myDoc.addEle(Paragraph.withPieces(Adress, adress).create());
+
+                ParagraphPiece Structure = ParagraphPiece.with("Структура предприятия: ").withStyle().bold().create();
+                ParagraphPiece structure = ParagraphPiece.with(firm.getStructure()).create();
+                myDoc.addEle(Paragraph.withPieces(Structure, structure).create());
+                        
+            myDoc.addEle(Heading1.with("Обзор рассчитанных экономических коэфициентов фирмы").create());
+            myDoc.addEle(BreakLine.times(1).create());
+            
+            Table tbl = new Table();
+                tbl.addTableEle(TableEle.TH, "Название", "Нормативное значение", "Рассчитанное значение");
+                tbl.setRepeatTableHeaderOnEveryPage();
+                reviews.stream().forEach((review) -> {
+                    tbl.addTableEle(TableEle.TD, review.getName(), review.getStandart(), ""+review.getValue());
+                });
+            myDoc.addEle(tbl);
+            myDoc.addEle(BreakLine.times(2).create());
+        
+            myDoc.addEle(Heading2.with("Краткий обзор сведений.").withStyle().align(HeadingStyle.Align.CENTER).italic().create());
+            
+            reviews.stream().map((review) -> {
+                String result = review.getReason();
+                if(!review.getSuggestion().equals("")){
+                    result = result+ "("+review.getSuggestion()+")";
+                }
+                return result;
+            }).map((result) -> ParagraphPiece.with(result)).map((myParPiece01) -> {
+                myDoc.addEle(Paragraph.withPieces(myParPiece01).create());
+                return myParPiece01;
+            }).forEach((_item) -> {
+                myDoc.addEle(BreakLine.times(1).create());
+            });
+            
+            String myWord = myDoc.getContent(); 
+            File fileObj = new File("Review (company - "+firmTitle+").doc");
+
+            PrintWriter writer = null;
+            try {
+                writer = new PrintWriter(fileObj);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            writer.println(myWord);
+            writer.close(); 
+        } catch (RemoteException | NotBoundException ex) {
+            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     private void displayChart(){
         try {
-            Chart chart = new ChartBuilder().chartType(ChartType.Bar).width(800).height(600).title("Финансовое состояние фирмы").xAxisTitle("Показатели").yAxisTitle("Значение").theme(ChartTheme.GGPlot2).build();
+            Chart chart = new ChartBuilder().chartType(ChartType.Bar).width(600).height(600).title("Финансовое состояние фирмы").xAxisTitle("Показатели").yAxisTitle("Значение").theme(ChartTheme.GGPlot2).build();
             Commander commander = new Commander();
             String firmTitle = (String) FirmjComboBox1.getSelectedItem();
-            double[] values = (double[])commander.getFirmReviews.execute(firmTitle);
-            chart.addSeries("Норма", Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8"}), Arrays.asList(new Number[] {0.6,0.5,0.1,0.35,0,0.1,2,0}));
-            chart.addSeries("Показатели",  Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8"}),Arrays.asList(new Number[] {values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7]}));
+            double[] values = (double[])commander.getFirmReviewsValues.execute(firmTitle);
+            if(values != null){
+                chart.addSeries("Норма", Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8"}), Arrays.asList(new Number[] {0.6,0.5,0.1,0.35,0,0.1,2,0}));
+                chart.addSeries("Показатели",  Arrays.asList(new String[] { "1", "2", "3", "4", "5", "6", "7", "8"}),Arrays.asList(new Number[] {values[0],values[1],values[2],values[3],values[4],values[5],values[6],values[7]}));
+            }
             new SwingWrapper(chart).displayChart();
-        } catch (RemoteException ex) {
-            Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
+        } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(WorkAreaPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -1028,14 +1149,15 @@ public class WorkAreaPanel extends javax.swing.JPanel {
     private javax.swing.JSpinner IncomejSpinner;
     private javax.swing.JSpinner LongTermDutiesjSpinner;
     private javax.swing.JSpinner OwnedAssetsjSpinner;
+    private javax.swing.JButton PrintReviewjButton;
     private javax.swing.JSpinner ProfitjSpinner;
+    private javax.swing.JButton RecomandationsjButton;
     private javax.swing.JButton RedactFirmjButton;
     private javax.swing.JButton RegisterFirmjButton;
     private javax.swing.JButton SavePerfomancejButton;
     private javax.swing.JSpinner ShortTermDutiesjSpinner;
     private datechooser.beans.DateChooserPanel dateChooserPanel1;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
     private javax.swing.JDesktopPane jDesktopPane1;
     private javax.swing.JDesktopPane jDesktopPane3;
     private javax.swing.JLabel jLabel1;

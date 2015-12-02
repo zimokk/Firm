@@ -43,7 +43,9 @@ public class Commander{
     
     public RemoteValidatedCommand registerFirm;
     
+    public RemoteCustomCommand getFirmReviewsValues;
     public RemoteCustomCommand getFirmReviews;
+    public RemoteCustomCommand getFirm;
     
     private final Registry registry;
 
@@ -79,6 +81,9 @@ public class Commander{
         
         registerFirm = (RemoteValidatedCommand) registry.lookup(Announcement.REGISTER_FIRM);
         
+        getFirmReviewsValues = (RemoteCustomCommand) registry.lookup(Announcement.GET_FIRM_REVIEWS_VALUES);
         getFirmReviews = (RemoteCustomCommand) registry.lookup(Announcement.GET_FIRM_REVIEWS);
+        
+        getFirm = (RemoteCustomCommand) registry.lookup(Announcement.GET_FIRM);
     }
 }

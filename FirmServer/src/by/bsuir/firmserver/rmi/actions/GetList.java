@@ -14,6 +14,7 @@ public class GetList <T> extends UnicastRemoteObject implements RemoteCommand <T
     GenericDao MySqlClassDao;
 
     public GetList(GenericDao MySqlClassDao) throws RemoteException {
+        super();
         this.MySqlClassDao = MySqlClassDao;
     }
     

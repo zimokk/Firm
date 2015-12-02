@@ -10,10 +10,12 @@ import by.bsuir.firmserver.rmi.actions.GetList;
 import by.bsuir.firmserver.rmi.actions.usercommands.RegisterUser;
 import by.bsuir.firmserver.rmi.actions.UpdateInstance;
 import by.bsuir.firmserver.rmi.actions.admincommands.DeleteUser;
+import by.bsuir.firmserver.rmi.actions.firmcommands.GetFirm;
 import by.bsuir.firmserver.rmi.actions.firmcommands.GetFirmPerfomance;
 import by.bsuir.firmserver.rmi.actions.firmcommands.GetUserFirms;
 import by.bsuir.firmserver.rmi.actions.firmcommands.RegisterFirm;
 import by.bsuir.firmserver.rmi.actions.rewievcommands.GetFirmReviews;
+import by.bsuir.firmserver.rmi.actions.rewievcommands.GetFirmReviewsValues;
 import by.bsuir.firmserver.rmi.actions.usercommands.LoginUser;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -23,7 +25,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class MainServer {
-
+    
     public static void main(String[] args) {
         try {
             
@@ -68,7 +70,9 @@ public class MainServer {
             
             registry.rebind(Announcement.REGISTER_FIRM, new RegisterFirm(daoFactory));
                         
+            registry.rebind(Announcement.GET_FIRM_REVIEWS_VALUES, new GetFirmReviewsValues(daoFactory));
             registry.rebind(Announcement.GET_FIRM_REVIEWS, new GetFirmReviews(daoFactory));
+            registry.rebind(Announcement.GET_FIRM, new GetFirm(firmDao));
             
         } catch (SQLException | NullPointerException | RemoteException ex) {
             Logger.getLogger(MainServer.class.getName()).log(Level.SEVERE, null, ex);

@@ -3,10 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmserver/dao/classes/MySqlPerfomanceDao.java</file>
-            <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmserver/rmi/actions/firmcommands/RegisterFirm.java</file>
             <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmclient/panels/WorkAreaPanel.java</file>
-            <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmserver/rmi/Announcement.java</file>
+            <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmclient/MainClient.java</file>
+            <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmserver/rmi/actions/GetList.java</file>
             <file>file:/D:/Универ/3%20курс/Курсай/FirmServer/src/by/bsuir/firmserver/MainServer.java</file>
         </group>
     </open-files>
